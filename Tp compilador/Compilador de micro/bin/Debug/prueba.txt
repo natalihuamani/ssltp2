@@ -1,6 +1,4 @@
 inicio
-variableA:=14;
-variableB:=3;
-leer(c);
-escribir(variableA+variableB);
-fin
+variableA:=14
+variableB:=3
+fin;

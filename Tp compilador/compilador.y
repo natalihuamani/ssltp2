@@ -12,17 +12,20 @@
 
     struct registroTS{
         char cadena[TAM_CADENA];
-        int atributo; //'P' si es PR, 'I' si es ID
+        int atributo; //'P' si es PR, 'I' si es I
+        int valor;
     };
 
     struct registroTS TS[32];
     int pointerTS = 0;
+    int contadorLineas = 1;
 
 //funciones:
     void initializeTS();
-    void addToTS(char [], int );
+    void addToTS(char [], int ,int);
     int isInTS(char []);
     void printTS();
+    int buscarEnTabla(char []);
     %}
 
 %token INICIO FIN LEER ESCRIBIR IDENTIFICADOR CONSTANTE SUMA RESTA ASIGNACION COMA PARENIZQUIERDO PARENDERECHO PUNTOYCOMA
@@ -40,27 +43,27 @@ sentencia PUNTOYCOMA
 | sentencia PUNTOYCOMA listaSentencias
 ;
 sentencia :
-LEER PARENIZQUIERDO listaIdentificadores PARENDERECHO
-| ESCRIBIR PARENIZQUIERDO listaExpresiones PARENDERECHO
-| IDENTIFICADOR ASIGNACION expresion {$$=$1; addToTS($$,'I');}
+IDENTIFICADOR ASIGNACION expresion {contadorLineas++;$$=$1; addToTS($$,'I',$3);}
+|LEER PARENIZQUIERDO listaIdentificadores PARENDERECHO {contadorLineas++;int num=0;printf("Ingrese la variable:");scanf("%d",&num);actualizarTS($3,'I',num);}
+| ESCRIBIR PARENIZQUIERDO listaExpresiones PARENDERECHO {contadorLineas++;printf("VALOR IMPRESO EN PANTALLA: %d\n",$3);}
 ;
 listaIdentificadores :
-IDENTIFICADOR {addToTS($$,'I');}
-| listaIdentificadores COMA IDENTIFICADOR {addToTS($3,'I');}
+IDENTIFICADOR {addToTS($$,'I',0);}
+| listaIdentificadores COMA IDENTIFICADOR {addToTS($3,'I',0);}
 ;
 listaExpresiones :
 expresion
 | listaExpresiones COMA expresion
 ;
 expresion :
-primaria
-| expresion SUMA primaria
-| expresion RESTA primaria
+primaria {$$=$1;}
+| expresion SUMA primaria {$$=$1 + $3;}
+| expresion RESTA primaria {$$=$1 - $3;}
 ;
 primaria :
-IDENTIFICADOR {addToTS($$,'I');}
-| CONSTANTE
-| PARENIZQUIERDO expresion PARENDERECHO
+IDENTIFICADOR {$$=buscarEnTabla($1);addToTS($1,'I',$$);}
+| CONSTANTE {$$=atoi($1);}
+| PARENIZQUIERDO expresion PARENDERECHO {$$=$2;}
 ;
 
 %%
@@ -99,20 +102,35 @@ int main(int argc, char * argv[])
 }
 void initializeTS()  //Agregar Palabras Reservadas
 {
-    addToTS("inicio",'P');
-    addToTS("fin",'P');
-    addToTS("leer",'P');
-    addToTS("escribir",'P');
+    for(int i=0;i<32;i++){
+        strcpy(TS[i].cadena,"");
+        TS[i].atributo = 0;
+        TS[i].valor = 0;
+    }
+    addToTS("inicio",'P',0);
+    addToTS("fin",'P',0);
+    addToTS("leer",'P',0);
+    addToTS("escribir",'P',0);
 }
-void addToTS(char cadena[TAM_CADENA], int atributo)
+void addToTS(char cadena[TAM_CADENA], int atributo, int valor)
 {
     if(!isInTS(cadena))
     {
         strcpy(TS[pointerTS].cadena,cadena);
         TS[pointerTS].atributo = atributo;
+        TS[pointerTS].valor = valor;
         pointerTS++;
     }
 }
+
+void actualizarTS(char cadena[TAM_CADENA], int atributo, int valor){
+    for(int i=0;i<pointerTS;i++){
+        if(strcmp(TS[i].cadena, cadena)==0){
+            TS[i].valor=valor;
+        }
+    }
+}
+
 int isInTS(char cadena[TAM_CADENA])
 {
     int counter = 0;
@@ -124,20 +142,31 @@ int isInTS(char cadena[TAM_CADENA])
     }
     return 0; //not in table
 }
+
+int buscarEnTabla(char* cadena){
+    for(int counter = 0;counter<32;counter++)
+    {
+        if(strcmp(TS[counter].cadena,"")!=0){
+            if(strcmp(TS[counter].cadena, cadena)==0){
+                return TS[counter].valor;
+            }
+        }
+    }
+    return 0; //not in table
+}
 void printTS()
 {
     printf("\n\n -------------- TS -----------------\n");
     int counter = 0;
-    while(TS[counter].atributo == 'P' ||TS[counter].atributo == 'I')
+    for(int counter = 0;counter<32;counter++)
     {
-        printf("Cadena: %s, Atributo: %c \n",TS[counter].cadena,TS[counter].atributo);
-        counter++;
+        printf("Cadena: %s, Atributo: %c, Valor: %d \n",TS[counter].cadena,TS[counter].atributo,TS[counter].valor);
     }
     printf("\n\n -----------------------------------");
 }
 void yyerror(char* s)
 {
-    printf("%s\n", s);
+    printf("%s en la linea %d\n", s, contadorLineas);
 }
 int yywrap()
 {

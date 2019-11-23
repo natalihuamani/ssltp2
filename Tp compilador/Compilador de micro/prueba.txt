@@ -2,5 +2,7 @@ inicio
 variableA:=14;
 variableB:=3;
 leer(c);
+variableD:=variableA+c;
+escribir(variableD);
 escribir(variableA+variableB);
 fin

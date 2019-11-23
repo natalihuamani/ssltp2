@@ -78,20 +78,23 @@
 
     struct registroTS{
         char cadena[TAM_CADENA];
-        int atributo; //'P' si es PR, 'I' si es ID
+        int atributo; //'P' si es PR, 'I' si es I
+        int valor;
     };
 
     struct registroTS TS[32];
     int pointerTS = 0;
+    int contadorLineas = 1;
 
 //funciones:
     void initializeTS();
-    void addToTS(char [], int );
+    void addToTS(char [], int ,int);
     int isInTS(char []);
     void printTS();
+    int buscarEnTabla(char []);
     
 /* Line 371 of yacc.c  */
-#line 95 "compilador.tab.c"
+#line 98 "compilador.tab.c"
 
 # ifndef YY_NULL
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -109,10 +112,7 @@
 # define YYERROR_VERBOSE 0
 #endif
 
-/* In a future release of Bison, this section will be replaced
-   by #include "compilador.tab.h".  */
-#ifndef YY_YY_COMPILADOR_TAB_H_INCLUDED
-# define YY_YY_COMPILADOR_TAB_H_INCLUDED
+
 /* Enabling traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -167,7 +167,7 @@ int yyparse ();
 #endif
 #endif /* ! YYPARSE_PARAM */
 
-#endif /* !YY_YY_COMPILADOR_TAB_H_INCLUDED  */
+
 
 /* Copy the second part of user declarations.  */
 
@@ -448,7 +448,7 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     7,    10,    13,    17,    22,    27,    31,
+       0,     0,     3,     7,    10,    13,    17,    21,    26,    31,
       33,    37,    39,    43,    45,    49,    53,    55,    57
 };
 
@@ -456,8 +456,8 @@ static const yytype_uint8 yyprhs[] =
 static const yytype_int8 yyrhs[] =
 {
       17,     0,    -1,     3,    18,     4,    -1,     3,     4,    -1,
-      19,    15,    -1,    19,    15,    18,    -1,     5,    13,    20,
-      14,    -1,     6,    13,    21,    14,    -1,     7,    11,    22,
+      19,    15,    -1,    19,    15,    18,    -1,     7,    11,    22,
+      -1,     5,    13,    20,    14,    -1,     6,    13,    21,    14,
       -1,     7,    -1,    20,    12,     7,    -1,    22,    -1,    21,
       12,    22,    -1,    23,    -1,    22,     9,    23,    -1,    22,
       10,    23,    -1,     7,    -1,     8,    -1,    13,    22,    14,
@@ -467,8 +467,8 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    35,    35,    36,    39,    40,    43,    44,    45,    48,
-      49,    52,    53,    56,    57,    58,    61,    62,    63
+       0,    38,    38,    39,    42,    43,    46,    47,    48,    51,
+      52,    55,    56,    59,    60,    61,    64,    65,    66
 };
 #endif
 
@@ -505,7 +505,7 @@ static const yytype_uint8 yyr1[] =
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     3,     2,     2,     3,     4,     4,     3,     1,
+       0,     2,     3,     2,     2,     3,     3,     4,     4,     1,
        3,     1,     3,     1,     3,     3,     1,     1,     3
 };
 
@@ -516,7 +516,7 @@ static const yytype_uint8 yydefact[] =
 {
        0,     0,     0,     3,     0,     0,     0,     0,     0,     1,
        0,     0,     0,     2,     4,     9,     0,    16,    17,     0,
-       0,    11,    13,     8,     5,     0,     6,     0,     0,     7,
+       0,    11,    13,     6,     5,     0,     7,     0,     0,     8,
        0,     0,    10,    18,    12,    14,    15
 };
 
@@ -1378,43 +1378,85 @@ yyreduce:
     {
         case 2:
 /* Line 1792 of yacc.c  */
-#line 35 "compilador.y"
+#line 38 "compilador.y"
     {return 1;}
     break;
 
   case 3:
 /* Line 1792 of yacc.c  */
-#line 36 "compilador.y"
+#line 39 "compilador.y"
     {return 1;}
+    break;
+
+  case 6:
+/* Line 1792 of yacc.c  */
+#line 46 "compilador.y"
+    {printf("INCREMENTO1");contadorLineas++;(yyval)=(yyvsp[(1) - (3)]); addToTS((yyval),'I',(yyvsp[(3) - (3)]));}
+    break;
+
+  case 7:
+/* Line 1792 of yacc.c  */
+#line 47 "compilador.y"
+    {printf("INCREMENTO1");contadorLineas++;int num=0;printf("Ingrese la variable:");scanf("%d",&num);actualizarTS((yyvsp[(3) - (4)]),'I',num);}
     break;
 
   case 8:
 /* Line 1792 of yacc.c  */
-#line 45 "compilador.y"
-    {(yyval)=(yyvsp[(1) - (3)]); addToTS((yyval),'I');}
+#line 48 "compilador.y"
+    {printf("INCREMENTO1");contadorLineas++;printf("VALOR IMPRESO EN PANTALLA: %d\n",(yyvsp[(3) - (4)]));}
     break;
 
   case 9:
 /* Line 1792 of yacc.c  */
-#line 48 "compilador.y"
-    {addToTS((yyval),'I');}
+#line 51 "compilador.y"
+    {addToTS((yyval),'I',0);}
     break;
 
   case 10:
 /* Line 1792 of yacc.c  */
-#line 49 "compilador.y"
-    {addToTS((yyvsp[(3) - (3)]),'I');}
+#line 52 "compilador.y"
+    {addToTS((yyvsp[(3) - (3)]),'I',0);}
+    break;
+
+  case 13:
+/* Line 1792 of yacc.c  */
+#line 59 "compilador.y"
+    {(yyval)=(yyvsp[(1) - (1)]);}
+    break;
+
+  case 14:
+/* Line 1792 of yacc.c  */
+#line 60 "compilador.y"
+    {(yyval)=(yyvsp[(1) - (3)]) + (yyvsp[(3) - (3)]);}
+    break;
+
+  case 15:
+/* Line 1792 of yacc.c  */
+#line 61 "compilador.y"
+    {(yyval)=(yyvsp[(1) - (3)]) - (yyvsp[(3) - (3)]);}
     break;
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 61 "compilador.y"
-    {addToTS((yyval),'I');}
+#line 64 "compilador.y"
+    {(yyval)=buscarEnTabla((yyvsp[(1) - (1)]));addToTS((yyvsp[(1) - (1)]),'I',(yyval));}
+    break;
+
+  case 17:
+/* Line 1792 of yacc.c  */
+#line 65 "compilador.y"
+    {(yyval)=atoi((yyvsp[(1) - (1)]));}
+    break;
+
+  case 18:
+/* Line 1792 of yacc.c  */
+#line 66 "compilador.y"
+    {(yyval)=(yyvsp[(2) - (3)]);}
     break;
 
 
 /* Line 1792 of yacc.c  */
-#line 1418 "compilador.tab.c"
+#line 1460 "compilador.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1646,7 +1688,7 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 66 "compilador.y"
+#line 69 "compilador.y"
 
 
 int main(int argc, char * argv[])
@@ -1683,20 +1725,35 @@ int main(int argc, char * argv[])
 }
 void initializeTS()  //Agregar Palabras Reservadas
 {
-    addToTS("inicio",'P');
-    addToTS("fin",'P');
-    addToTS("leer",'P');
-    addToTS("escribir",'P');
+    for(int i=0;i<32;i++){
+        strcpy(TS[i].cadena,"");
+        TS[i].atributo = 0;
+        TS[i].valor = 0;
+    }
+    addToTS("inicio",'P',0);
+    addToTS("fin",'P',0);
+    addToTS("leer",'P',0);
+    addToTS("escribir",'P',0);
 }
-void addToTS(char cadena[TAM_CADENA], int atributo)
+void addToTS(char cadena[TAM_CADENA], int atributo, int valor)
 {
     if(!isInTS(cadena))
     {
         strcpy(TS[pointerTS].cadena,cadena);
         TS[pointerTS].atributo = atributo;
+        TS[pointerTS].valor = valor;
         pointerTS++;
     }
 }
+
+void actualizarTS(char cadena[TAM_CADENA], int atributo, int valor){
+    for(int i=0;i<pointerTS;i++){
+        if(strcmp(TS[i].cadena, cadena)==0){
+            TS[i].valor=valor;
+        }
+    }
+}
+
 int isInTS(char cadena[TAM_CADENA])
 {
     int counter = 0;
@@ -1708,20 +1765,31 @@ int isInTS(char cadena[TAM_CADENA])
     }
     return 0; //not in table
 }
+
+int buscarEnTabla(char* cadena){
+    for(int counter = 0;counter<32;counter++)
+    {
+        if(strcmp(TS[counter].cadena,"")!=0){
+            if(strcmp(TS[counter].cadena, cadena)==0){
+                return TS[counter].valor;
+            }
+        }
+    }
+    return 0; //not in table
+}
 void printTS()
 {
     printf("\n\n -------------- TS -----------------\n");
     int counter = 0;
-    while(TS[counter].atributo == 'P' ||TS[counter].atributo == 'I')
+    for(int counter = 0;counter<32;counter++)
     {
-        printf("Cadena: %s, Atributo: %c \n",TS[counter].cadena,TS[counter].atributo);
-        counter++;
+        printf("Cadena: %s, Atributo: %c, Valor: %d \n",TS[counter].cadena,TS[counter].atributo,TS[counter].valor);
     }
     printf("\n\n -----------------------------------");
 }
 void yyerror(char* s)
 {
-    printf("%s\n", s);
+    printf("%s en la linea %d\n", s, contadorLineas);
 }
 int yywrap()
 {
