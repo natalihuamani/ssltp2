@@ -70,14 +70,16 @@ IDENTIFICADOR {$$=buscarEnTabla($1);addToTS($1,'I',$$);}
 
 int main(int argc, char * argv[])
 {
-// -------- Declaracion ---------
+
     FILE *fileIn;
     char nomArchi[TAM_NOMBRE];
-// ------ Prep Phase ----------
+
+    //Inicializo la tabla de simbolos
     initializeTS();
-    if ( argc == 2 )  //Hay input file por linea de comandos
+
+    //Paso por parametro el archivo
+    if ( argc == 2 )
     {
-        printf("ene");
         strcpy(nomArchi, argv[1]);
         int l = strlen(nomArchi);
         if ( l > TAM_NOMBRE )
@@ -85,6 +87,7 @@ int main(int argc, char * argv[])
             printf("Nombre incorrecto del Archivo Fuente\n");
             return -1;
         }
+
         if ( (fileIn = fopen(nomArchi, "rb") ) == NULL )
         {
             printf("No se pudo abrir archivo fuente\n");
@@ -92,21 +95,25 @@ int main(int argc, char * argv[])
         }
         yyin=fileIn;
     }
-// ------ Work Phase ----------
+
     yyparse();
-// ------ Close Phase ----------
+
+    //Imprimo la tabla de simbolos
     printTS();
-    printf("\n\nEvaluacion Finalizada \n -------- \n ");
+
+    printf("\n----------- Se finalizo la operacion --------------\n");
     if ( argc == 2 )
         fclose(fileIn);
 }
-void initializeTS()  //Agregar Palabras Reservadas
+void initializeTS()
 {
+    //Inicializo todos los registros de la tabla de simbolos
     for(int i=0;i<32;i++){
         strcpy(TS[i].cadena,"");
         TS[i].atributo = 0;
         TS[i].valor = 0;
     }
+    //Agrego las palabras reservadas
     addToTS("inicio",'P',0);
     addToTS("fin",'P',0);
     addToTS("leer",'P',0);
@@ -140,7 +147,7 @@ int isInTS(char cadena[TAM_CADENA])
             return 1;
         counter++;
     }
-    return 0; //not in table
+    return 0;
 }
 
 int buscarEnTabla(char* cadena){
@@ -152,17 +159,17 @@ int buscarEnTabla(char* cadena){
             }
         }
     }
-    return 0; //not in table
+    return 0;
 }
 void printTS()
 {
-    printf("\n\n -------------- TS -----------------\n");
-    int counter = 0;
+    printf("\n-------------- Tabla de Simbolos -----------------\n");
     for(int counter = 0;counter<32;counter++)
     {
-        printf("Cadena: %s, Atributo: %c, Valor: %d \n",TS[counter].cadena,TS[counter].atributo,TS[counter].valor);
+        if(strcmp(TS[counter].cadena,"")!=0)
+            printf("Cadena: %s, Atributo: %c, Valor: %d \n",TS[counter].cadena,TS[counter].atributo,TS[counter].valor);
     }
-    printf("\n\n -----------------------------------");
+    printf("\n---------------------------------------------------");
 }
 void yyerror(char* s)
 {

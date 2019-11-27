@@ -1,4 +1,4 @@
 inicio
-variableA:=14
-variableB:=3
-fin;
+variableA:=14;
+variableB:=3;
+fin
